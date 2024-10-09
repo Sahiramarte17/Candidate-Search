@@ -13,3 +13,30 @@ This is a simple candidate search application using the GitHub API. You can sear
 ### Prerequisites
 - Node.js installed on your machine.
 - A GitHub Personal Access Token.
+
+### Setup
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/your-repo/candidate-search-app.git
+   cd candidate-search-app
+   Install dependencies:
+
+2. Install dependencies:
+
+npm install
+
+3. Create a .env file in the root directory and add your GitHub token:
+
+VITE_GITHUB_TOKEN=your_personal_access_token
+
+4. Run the app:
+
+npm run dev
+
+
+
+
+
+
+
+
