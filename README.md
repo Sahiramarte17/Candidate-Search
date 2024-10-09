@@ -33,6 +33,10 @@ VITE_GITHUB_TOKEN=your_personal_access_token
 
 npm run dev
 
+# Deployment
+
+The application can be deployed on Render. Follow the instructions on Render to deploy your app.
+
 
 
 
