@@ -1,46 +1,33 @@
-# Candidate-Search
+# React + TypeScript + Vite
 
-# Description
-This is a simple candidate search application using the GitHub API. You can search for candidates and save them as potential hires.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Features
-- Displays candidate information including name, username, location, avatar, email, company, and GitHub profile link.
-- Save candidates to view later.
-- Local storage to persist saved candidates.
+Currently, two official plugins are available:
 
-## Getting Started
+* [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md), which uses [Babel](https://babeljs.io/) for Fast Refresh
+* [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc), which uses [SWC](https://swc.rs/) for Fast Refresh
 
-### Prerequisites
-- Node.js installed on your machine.
-- A GitHub Personal Access Token.
+## Expanding the ESLint configuration
 
-### Setup
-1. Clone the repository:
-   ```sh
-   git clone https://github.com/your-repo/candidate-search-app.git
-   cd candidate-search-app
-   Install dependencies:
+If you're developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-2. Install dependencies:
+* Configure the top-level `parserOptions` property as follows:
 
-npm install
+```js
+export default {
+  // other rules...
+  parserOptions: {
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+    project: ['./tsconfig.json', './tsconfig.node.json'],
+    tsconfigRootDir: __dirname,
+  },
+}
+```
 
-3. Create a .env file in the root directory and add your GitHub token:
+* Replace `plugin:@typescript-eslint/recommended` with `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`.
+* Optionally, add `plugin:@typescript-eslint/stylistic-type-checked`.
+* Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` and `plugin:react/jsx-runtime` to the `extends` list.
 
-VITE_GITHUB_TOKEN=your_personal_access_token
-
-4. Run the app:
-
-npm run dev
-
-# Deployment
-
-The application can be deployed on Render. Follow the instructions on Render to deploy your app.
-
-
-
-
-
-
-
-
+---
+© 2024 edX Boot Camps LLC. Confidential and Proprietary. All Rights Reserved.
