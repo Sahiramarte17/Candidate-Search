@@ -1,8 +1,13 @@
 import { useState, useEffect } from 'react';
 import { searchGithub, searchGithubUser } from '../api/API';
-import Candidate from '../interfaces/Candidate'; 
+import Candidate from '../interfaces/Candidate.interface'; 
+import EmptyState from '../components/EmptyState';
+import CandidateCard from '../components/CandidateCard';
+import Loader from '../components/Loader';
+
 
 const CandidateSearch = () => {
+  const [dataset, setDataset] = useState<Candidate[]>([])
   const [candidate, setCandidate] = useState<Candidate | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -10,20 +15,33 @@ const CandidateSearch = () => {
   // Function to fetch a random candidate
   const fetchCandidate = async () => {
     setLoading(true);
-    setError(null);
     try {
-      const data = await searchGithubUser(); // Replace with your API call
-      setCandidate(data);
+      const data = await searchGithub(); // Replace with your API call
+      setDataset(data);
+      chooseCandidateFromArray();
     } catch (err) {
       setError('Failed to fetch candidate');
     } finally {
       setLoading(false);
+     
     }
   };
 
   useEffect(() => {
     fetchCandidate(); // Fetch candidate on component mount
   }, []);
+
+
+  const chooseCandidateFromArray = () => {
+    const index = Math.floor(Math.random() * dataset.length) + 1;
+    const selectedCadidate = dataset[index];
+   fetchNextCandidate(selectedCadidate.username);
+  };
+
+  const fetchNextCandidate = async (username: string) => {
+    const nextCandidate = await searchGithubUser(username);
+    setCandidate(nextCandidate);
+  };
 
   const handleSaveCandidate = () => {
     // Logic to save candidate to local storage or state
@@ -35,31 +53,17 @@ const CandidateSearch = () => {
     fetchCandidate(); // Fetch the next candidate without saving
   };
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
-
-  if (!candidate) return <p>No candidate available</p>;
+  if (loading) return <Loader/>;
+  if (error) return <EmptyState message={error} />;
+  if (!candidate) return <EmptyState message="No candidate available" />;
 
 
 return (
-<div>
-      <h1>Candidate Search</h1>
-      <div>
-        <img src={candidate.avatar_url} alt={`${candidate.name}'s avatar`} />
-        <h2>{candidate.name || candidate.login}</h2>
-        <p>Location: {candidate.location || 'Not specified'}</p>
-        <p>Company: {candidate.company || 'Not specified'}</p>
-        <p>Email: {candidate.email || 'Not specified'}</p>
-        <p>
-          <a href={candidate.html_url} target="_blank" rel="noopener noreferrer">
-            View Profile
-          </a>
-        </p>
-        <button onClick={handleSaveCandidate}>+</button>
-        <button onClick={handleSkipCandidate}>-</button>
-      </div>
-    </div>
-  );
+  <div>
+  <h1>Candidate Search</h1>
+  <CandidateCard candidate={candidate} onSave={handleSaveCandidate} onSkip={handleSkipCandidate} />
+</div>
+);
 };
 
 export default CandidateSearch;
