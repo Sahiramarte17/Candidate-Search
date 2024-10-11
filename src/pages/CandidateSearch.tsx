@@ -9,33 +9,54 @@ import Loader from '../components/Loader';
 const CandidateSearch = () => {
   const [dataset, setDataset] = useState<Candidate[]>([])
   const [candidate, setCandidate] = useState<Candidate | null>(null);
-  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-
+  const [error, setError] = useState<string | null>(null);
+ 
+  console.log(dataset)
   // Function to fetch a random candidate
   const fetchCandidate = async () => {
     setLoading(true);
     try {
-      const data = await searchGithub(); // Replace with your API call
+      const data: Candidate[] = await searchGithub(); // Replace with your API call
+
+      console.log("data from api :" , data)
       setDataset(data);
-      chooseCandidateFromArray();
+      console.log("updated dataset", dataset);
+      console.log("going into chooseCanditdateFromArray function")
+      
+      console.log("after choose Candidate")
     } catch (err) {
+      console.log(err)
       setError('Failed to fetch candidate');
+
     } finally {
       setLoading(false);
      
     }
+    
   };
 
   useEffect(() => {
+    if (dataset.length) {
+      chooseCandidateFromArray();
+    }
+    
+  }, [dataset])
+
+
+  useEffect(() => {
+    console.log("starting page");
     fetchCandidate(); // Fetch candidate on component mount
+    console.log("after api call");
   }, []);
 
 
   const chooseCandidateFromArray = () => {
     const index = Math.floor(Math.random() * dataset.length) + 1;
-    const selectedCadidate = dataset[index];
-   fetchNextCandidate(selectedCadidate.username);
+    console.log("data set : ", dataset);
+    console.log("checking index to get random candidate :", index);
+    const selectedCandidate = dataset[index];
+   fetchNextCandidate(selectedCandidate.username);
   };
 
   const fetchNextCandidate = async (username: string) => {

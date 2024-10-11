@@ -15,7 +15,7 @@ const SaveCandidateList: React.FC<SaveCandidateListProps> = ({ savedCandidates }
           <CandidateCard key={index} candidate={candidate} />
         ))
       ) : (
-        <EmptyState message="No candidates have been accepted yet." />
+        <p>No candidates have been accepted</p>
       )}
     </div>
   );
