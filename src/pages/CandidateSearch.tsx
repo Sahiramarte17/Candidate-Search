@@ -80,6 +80,7 @@ const CandidateSearch = () => {
 
 
 return (
+  
   <div>
   <h1>Candidate Search</h1>
   <CandidateCard candidate={candidate} onSave={handleSaveCandidate} onSkip={handleSkipCandidate} />
