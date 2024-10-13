@@ -1,91 +1,101 @@
-import { useState, useEffect } from 'react';
-import { searchGithub, searchGithubUser } from '../api/API';
-import Candidate from '../interfaces/Candidate.interface'; 
-import EmptyState from '../components/EmptyState';
-import CandidateCard from '../components/CandidateCard';
-import Loader from '../components/Loader';
+import { useState, useEffect } from "react";
+import { getCandidateData } from "../api/API";
 
+// Predefined list of GitHub usernames
+const randomUsernames = [
+  "octocat",
+  "torvalds",           // Linus Torvalds
+  "gaearon",            // Dan Abramov
+  "addyosmani",         // Addy Osmani
+  "yyx990803",          // Evan You
+  "kentcdodds",         // Kent C. Dodds
+  "sindresorhus",       // Sindre Sorhus
+  "jaredpalmer",        // Jared Palmer
+  "tj",                 // TJ Holowaychuk
+  "getify",             // Kyle Simpson
+  "bradtraversy"        // Brad Traversy
+];
+
+// Function to get a random username from the list
+const getRandomUsername = (usernames: string[]) => {
+  const randomIndex = Math.floor(Math.random() * usernames.length);
+  return usernames[randomIndex];
+};
 
 const CandidateSearch = () => {
-  const [dataset, setDataset] = useState<Candidate[]>([])
-  const [candidate, setCandidate] = useState<Candidate | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [candidate, setCandidate] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
- 
-  console.log(dataset)
-  // Function to fetch a random candidate
-  const fetchCandidate = async () => {
+
+  // Function to fetch candidate data based on a randomly selected username
+  const fetchCandidate = async (username: string) => {
     setLoading(true);
+    setError(null); // Clear previous errors before starting a new request
     try {
-      const data: Candidate[] = await searchGithub(); // Replace with your API call
-
-      console.log("data from api :" , data)
-      setDataset(data);
-      console.log("updated dataset", dataset);
-      console.log("going into chooseCanditdateFromArray function")
-      
-      console.log("after choose Candidate")
+      const data = await getCandidateData(username);
+      if (data) {
+        setCandidate(data);
+      } else {
+        setError("No data found for this candidate.");
+      }
     } catch (err) {
-      console.log(err)
-      setError('Failed to fetch candidate');
-
+      setError("Error fetching candidate data.");
     } finally {
       setLoading(false);
-     
     }
-    
   };
 
+  // Fetch a random candidate when the component first mounts
   useEffect(() => {
-    if (dataset.length) {
-      chooseCandidateFromArray();
-    }
-    
-  }, [dataset])
-
-
-  useEffect(() => {
-    console.log("starting page");
-    fetchCandidate(); // Fetch candidate on component mount
-    console.log("after api call");
+    const initialUsername = getRandomUsername(randomUsernames);
+    fetchCandidate(initialUsername);
   }, []);
 
+  // Save the candidate to localStorage
+  const saveCandidate = () => {
+    if (candidate) {
+      const savedCandidates = JSON.parse(localStorage.getItem("savedCandidates") || "[]");
+      localStorage.setItem("savedCandidates", JSON.stringify([...savedCandidates, candidate]));
 
-  const chooseCandidateFromArray = () => {
-    const index = Math.floor(Math.random() * dataset.length) + 1;
-    console.log("data set : ", dataset);
-    console.log("checking index to get random candidate :", index);
-    const selectedCandidate = dataset[index];
-   fetchNextCandidate(selectedCandidate.username);
+      // Fetch a new random candidate after saving
+      const nextUsername = getRandomUsername(randomUsernames);
+      fetchCandidate(nextUsername);
+    }
   };
 
-  const fetchNextCandidate = async (username: string) => {
-    const nextCandidate = await searchGithubUser(username);
-    setCandidate(nextCandidate);
+  // Skip to the next candidate
+  const skipCandidate = () => {
+    const nextUsername = getRandomUsername(randomUsernames);
+    fetchCandidate(nextUsername);
   };
 
-  const handleSaveCandidate = () => {
-    // Logic to save candidate to local storage or state
-    console.log('Candidate saved:', candidate);
-    fetchCandidate(); // Fetch next candidate
-  };
+  // If data is loading, show a loading message
+  if (loading) return <p>Loading...</p>;
 
-  const handleSkipCandidate = () => {
-    fetchCandidate(); // Fetch the next candidate without saving
-  };
+  // If an error occurs, show an error message
+  if (error) return <p>{error}</p>;
 
-  if (loading) return <Loader/>;
-  if (error) return <EmptyState message={error} />;
-  if (!candidate) return <EmptyState message="No candidate available" />;
+  // Render the candidate's information if available, otherwise show a message
+  return candidate ? (
+    <div>
+      <img src={candidate.avatar_url} alt={`${candidate.name || "User"}'s avatar`} />
+      <h2>{candidate.name || "Name not available"}</h2>
+      <p>Username: {candidate.login || "Username not available"}</p>
+      <p>Location: {candidate.location || "Location not available"}</p>
+      <p>Email: {candidate.email || "Email not available"}</p>
+      <p>Company: {candidate.company || "Company not available"}</p>
+      <a href={candidate.html_url} target="_blank" rel="noopener noreferrer">
+        GitHub Profile
+      </a>
 
-
-return (
-  
-  <div>
-  <h1>Candidate Search</h1>
-  <CandidateCard candidate={candidate} onSave={handleSaveCandidate} onSkip={handleSkipCandidate} />
-</div>
-);
+      <button onClick={saveCandidate}>+ Save</button>
+      <button onClick={skipCandidate}>- Skip</button>
+    </div>
+  ) : (
+    <p>No candidate available.</p>
+  );
 };
 
 export default CandidateSearch;
+
+

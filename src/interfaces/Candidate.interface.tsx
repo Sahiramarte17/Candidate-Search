@@ -1,6 +1,5 @@
 // TODO: Create an interface for the Candidate objects returned by the API
-//export interface Candidate {   <-- a similar yet different method to EXPORT the THING(object, method, function, data, interface)
-interface Candidate {
+export interface Candidate {
   name: string | null;       // Candidate's full name (can be null)
   username: string;          // GitHub username (required)
   location: string | null;   // Candidate's location (can be null)
@@ -10,5 +9,5 @@ interface Candidate {
   company: string | null;    // Candidate's company (can be null)
 }
 
-
-export default Candidate;
+// Instead of default export, use named export
+// export default Candidate; // Remove this line
