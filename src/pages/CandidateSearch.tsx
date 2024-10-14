@@ -2,19 +2,39 @@ import { useState, useEffect } from "react";
 import { getCandidateData } from "../api/API";
 
 // Predefined list of GitHub usernames
+// Predefined list of GitHub usernames
 const randomUsernames = [
-  "octocat",
-  "torvalds",           // Linus Torvalds
-  "gaearon",            // Dan Abramov
-  "addyosmani",         // Addy Osmani
-  "yyx990803",          // Evan You
-  "kentcdodds",         // Kent C. Dodds
-  "sindresorhus",       // Sindre Sorhus
-  "jaredpalmer",        // Jared Palmer
-  "tj",                 // TJ Holowaychuk
-  "getify",             // Kyle Simpson
-  "bradtraversy"        // Brad Traversy
+  "octocat",          // GitHub's mascot account
+  "torvalds",         // Linus Torvalds, creator of Linux
+  "gaearon",          // Dan Abramov, co-creator of Redux
+  "addyosmani",       // Addy Osmani, Google Chrome team
+  "yyx990803",        // Evan You, creator of Vue.js
+  "kentcdodds",       // Kent C. Dodds, React educator
+  "sindresorhus",     // Sindre Sorhus, prolific open source contributor
+  "jaredpalmer",      // Jared Palmer, creator of Formik
+  "tj",               // TJ Holowaychuk, Node.js developer
+  "bradtraversy",     // Brad Traversy, developer educator
+  "getify",           // Kyle Simpson, author of "You Don't Know JS"
+  "sdras",            // Sarah Drasner, Vue.js core team
+  "paulirish",        // Paul Irish, Google Chrome developer advocate
+  "substack",         // James Halliday, prolific open source developer
+  "rachelnabors",     // Rachel Nabors, web animation expert
+  "mjackson",         // Michael Jackson, co-creator of React Router
+  "rauchg",           // Guillermo Rauch, creator of Next.js
+  "mxstbr",           // Max Stoiber, creator of styled-components
+  "timneutkens",      // Tim Neutkens, lead developer of Next.js
+  "sebmck",           // Sebastian McKenzie, creator of Babel
+  "davidwalshblog",   // David Walsh, Mozilla developer advocate
+  "LeaVerou",         // Lea Verou, CSS expert
+  "beep",             // Leah Culver, developer and writer
+  "igrigorik",        // Ilya Grigorik, web performance expert
+  "chriscoyier",      // Chris Coyier, creator of CSS-Tricks
+  "jensimmons"        // Jen Simmons, Mozilla developer advocate
 ];
+
+
+
+
 
 // Function to get a random username from the list
 const getRandomUsername = (usernames: string[]) => {
